@@ -133,29 +133,6 @@ Panel {
         flickableDirection: Flickable.VerticalFlick
         interactive: contentHeight > height
 
-        ScrollBar.vertical: ScrollBar {
-          id: scrollBar
-          parent: keyCatcher
-          anchors.left: keyCatcher.right
-          anchors.leftMargin: Style.space(4)
-          anchors.top: keyCatcher.top
-          anchors.bottom: keyCatcher.bottom
-          policy: panelScroll.interactive ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
-          width: Style.space(4)
-          padding: 0
-
-          contentItem: Rectangle {
-            implicitWidth: Style.space(4)
-            radius: width / 2
-            color: root.accentColor
-            opacity: scrollBar.pressed ? 0.95 : (scrollBar.hovered ? 0.8 : (panelScroll.moving || panelScroll.flicking ? 0.65 : 0.35))
-
-            Behavior on opacity {
-              NumberAnimation { duration: 150 }
-            }
-          }
-        }
-
         Column {
           id: mainColumn
           width: panelScroll.width
@@ -753,6 +730,37 @@ Panel {
                 root.persist({ soundEnabled: !checked })
               }
             }
+          }
+        }
+      }
+
+      ScrollBar {
+        id: scrollBar
+        anchors.left: panelScroll.right
+        anchors.leftMargin: Style.space(4)
+        anchors.top: panelScroll.top
+        anchors.bottom: panelScroll.bottom
+        orientation: Qt.Vertical
+        policy: panelScroll.interactive ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+        width: Style.space(4)
+        padding: 0
+        size: panelScroll.height / Math.max(panelScroll.height, panelScroll.contentHeight)
+        position: panelScroll.contentY / Math.max(1, panelScroll.contentHeight)
+
+        onPositionChanged: {
+          if (scrollBar.pressed) {
+            panelScroll.contentY = position * panelScroll.contentHeight
+          }
+        }
+
+        contentItem: Rectangle {
+          implicitWidth: Style.space(4)
+          radius: width / 2
+          color: root.accentColor
+          opacity: scrollBar.pressed ? 0.95 : (scrollBar.hovered ? 0.8 : (panelScroll.moving || panelScroll.flicking ? 0.65 : 0.35))
+
+          Behavior on opacity {
+            NumberAnimation { duration: 150 }
           }
         }
       }
