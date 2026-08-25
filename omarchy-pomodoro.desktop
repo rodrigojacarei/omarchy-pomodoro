@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Omarchy Pomodoro
+GenericName=Pomodoro Focus Timer
+Comment=Focus timer and productivity manager for Omarchy
+Exec=omarchy-pomodoro toggle
+Icon=preferences-system-time
+Terminal=false
+Type=Application
+Categories=Utility;Clock;Timer;Office;
+Keywords=pomodoro;timer;focus;productivity;work;break;clock;omarchy;
+StartupNotify=false
