@@ -63,8 +63,8 @@ Panel {
     open: root.opened
     centerOnBar: false
     focusTarget: keyCatcher
-    contentWidth: panel.fittedContentWidth(Style.space(360))
-    contentHeight: panel.fittedContentHeight(mainColumn.implicitHeight, Style.space(620))
+    contentWidth: panel.fittedContentWidth(Style.space(380))
+    contentHeight: panel.fittedContentHeight(mainColumn.implicitHeight, Style.space(640))
 
     PanelKeyCatcher {
       id: keyCatcher
@@ -261,11 +261,14 @@ Panel {
 
           // ---------------------------------------------------- Mode Switcher
           Row {
+            id: modeRow
             width: parent.width
             spacing: Style.space(6)
+            readonly property int itemWidth: Math.floor((width - spacing * 2) / 3)
 
             Button {
-              width: (parent.width - Style.space(12)) / 3
+              id: modeWorkBtn
+              width: modeRow.itemWidth
               text: "Focus"
               iconText: "󰔛"
               selected: timerHost ? timerHost.phase === Model.PHASE_WORK : true
@@ -279,7 +282,8 @@ Panel {
             }
 
             Button {
-              width: (parent.width - Style.space(12)) / 3
+              id: modeShortBtn
+              width: modeRow.itemWidth
               text: "Short"
               iconText: "󰚢"
               selected: timerHost ? timerHost.phase === Model.PHASE_SHORT_BREAK : false
@@ -293,7 +297,7 @@ Panel {
             }
 
             Button {
-              width: (parent.width - Style.space(12)) / 3
+              width: modeRow.width - (modeWorkBtn.width + modeShortBtn.width + modeRow.spacing * 2)
               text: "Long"
               iconText: "󰒲"
               selected: timerHost ? timerHost.phase === Model.PHASE_LONG_BREAK : false
@@ -309,12 +313,14 @@ Panel {
 
           // ------------------------------------------------- Primary Controls
           Row {
+            id: controlsRow
             width: parent.width
             spacing: Style.space(8)
 
             // Start / Pause Main Button
             Button {
-              width: parent.width - Style.space(96)
+              id: startPauseBtn
+              width: Math.max(100, controlsRow.width - (resetBtn.width + skipBtn.width + controlsRow.spacing * 2))
               text: timerHost && timerHost.isRunning ? "Pause" : "Start"
               iconText: timerHost && timerHost.isRunning ? "󰏤" : "󰐊"
               active: timerHost ? timerHost.isRunning : false
@@ -331,7 +337,8 @@ Panel {
 
             // Reset Button
             PanelActionButton {
-              size: Style.space(42)
+              id: resetBtn
+              size: Style.space(38)
               iconText: "󰑖"
               tooltipText: "Reset timer (R)"
               foreground: root.contentForeground
@@ -345,7 +352,8 @@ Panel {
 
             // Skip Button
             PanelActionButton {
-              size: Style.space(42)
+              id: skipBtn
+              size: Style.space(38)
               iconText: "󰒭"
               tooltipText: "Skip to next phase (S)"
               foreground: root.contentForeground
@@ -360,11 +368,14 @@ Panel {
 
           // ------------------------------------------------ Quick Adjustments
           Row {
+            id: adjustRow
             width: parent.width
             spacing: Style.space(6)
+            readonly property int itemWidth: Math.floor((width - spacing * 3) / 4)
 
             Button {
-              width: (parent.width - Style.space(18)) / 4
+              id: adj1
+              width: adjustRow.itemWidth
               text: "-5m"
               foreground: root.contentForeground
               fontFamily: root.contentFontFamily
@@ -373,7 +384,8 @@ Panel {
             }
 
             Button {
-              width: (parent.width - Style.space(18)) / 4
+              id: adj2
+              width: adjustRow.itemWidth
               text: "-1m"
               foreground: root.contentForeground
               fontFamily: root.contentFontFamily
@@ -382,7 +394,8 @@ Panel {
             }
 
             Button {
-              width: (parent.width - Style.space(18)) / 4
+              id: adj3
+              width: adjustRow.itemWidth
               text: "+1m"
               foreground: root.contentForeground
               fontFamily: root.contentFontFamily
@@ -391,7 +404,7 @@ Panel {
             }
 
             Button {
-              width: (parent.width - Style.space(18)) / 4
+              width: adjustRow.width - (adj1.width + adj2.width + adj3.width + adjustRow.spacing * 3)
               text: "+5m"
               foreground: root.contentForeground
               fontFamily: root.contentFontFamily
@@ -438,11 +451,13 @@ Panel {
 
             // Duration controls
             Row {
+              id: durationRow
               width: parent.width
               spacing: Style.space(8)
+              readonly property int fieldW: Math.floor((width - spacing * 2) / 3)
 
               NumberField {
-                width: (parent.width - Style.space(16)) / 3
+                width: durationRow.fieldW
                 fieldWidth: width
                 label: "Focus (min)"
                 value: timerHost ? timerHost.workMinutes : 25
@@ -457,7 +472,7 @@ Panel {
               }
 
               NumberField {
-                width: (parent.width - Style.space(16)) / 3
+                width: durationRow.fieldW
                 fieldWidth: width
                 label: "Short (min)"
                 value: timerHost ? timerHost.shortBreakMinutes : 5
@@ -472,7 +487,7 @@ Panel {
               }
 
               NumberField {
-                width: (parent.width - Style.space(16)) / 3
+                width: durationRow.fieldW
                 fieldWidth: width
                 label: "Long (min)"
                 value: timerHost ? timerHost.longBreakMinutes : 15
@@ -488,11 +503,13 @@ Panel {
             }
 
             Row {
+              id: cycleRow
               width: parent.width
               spacing: Style.space(8)
 
               NumberField {
-                width: (parent.width - Style.space(16)) / 3
+                id: roundsField
+                width: Math.floor((cycleRow.width - cycleRow.spacing) / 3)
                 fieldWidth: width
                 label: "Rounds/Cycle"
                 value: timerHost ? timerHost.longBreakInterval : 4
@@ -507,7 +524,7 @@ Panel {
               }
 
               Button {
-                width: (parent.width - Style.space(16)) * (2 / 3) + Style.space(8)
+                width: cycleRow.width - roundsField.width - cycleRow.spacing
                 anchors.bottom: parent.bottom
                 text: "Reset Cycle Count"
                 iconText: "󰑖"
