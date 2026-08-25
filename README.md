@@ -4,6 +4,16 @@ A beautiful, fully integrated Pomodoro focus timer plugin for **[Omarchy Linux](
 
 Designed specifically for the Omarchy status bar and Quickshell desktop environment, following Omarchy's design language, typography, and interactive keyboard/mouse controls.
 
+<div align="center">
+  <img src="assets/preview_panel.png" alt="Omarchy Pomodoro Ready" width="380" />
+  &nbsp;&nbsp;
+  <img src="assets/preview_running.png" alt="Omarchy Pomodoro Running" width="380" />
+</div>
+
+<p align="center">
+  <em>Live status bar timer, interactive popup panel, cycle tracking, and full customization.</em>
+</p>
+
 ---
 
 ## ✨ Features
@@ -47,6 +57,11 @@ Designed specifically for the Omarchy status bar and Quickshell desktop environm
     - Desktop notifications toggle
     - Sound chime toggle
 
+<div align="center">
+  <img src="assets/preview_settings.png" alt="Omarchy Pomodoro Settings" width="400" />
+  <p><em>Settings & Preferences drawer with custom durations and bar placement</em></p>
+</div>
+
 - **Desktop Notifications & Sound**:
   - Sends native `omarchy-notification-send` toasts with glyphs when sessions or breaks end.
   - Plays clean audio alert chime on completion.
@@ -72,7 +87,7 @@ Designed specifically for the Omarchy status bar and Quickshell desktop environm
 ### Option 1: Using Omarchy CLI (Git)
 
 ```bash
-omarchy plugin add https://github.com/<your-username>/omarchy-pomodoro.git --enable
+omarchy plugin add https://github.com/rodrigojacarei/omarchy-pomodoro.git --enable
 ```
 
 ### Option 2: Local Development / Manual Installation
