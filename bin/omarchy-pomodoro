@@ -22,13 +22,14 @@ Commands:
   long-break, long          Switch to Long Break mode
   +1, +1m, add              Add 1 minute to current timer
   -1, -1m, sub              Subtract 1 minute from current timer
+  unhide, show-bar          Always show widget on the status bar (disables hide-when-idle)
   move [left|center|right]  Move the widget to a bar section
 
 Examples:
   omarchy-pomodoro toggle
   omarchy-pomodoro play-pause
-  omarchy-pomodoro move right
-  omarchy-pomodoro skip
+  omarchy-pomodoro unhide
+  omarchy-pomodoro move center
 EOF
   exit 0
 }
@@ -74,6 +75,10 @@ case "$CMD" in
     ;;
   -1|-1m|sub)
     omarchy-shell omarchy-pomodoro subMinute
+    ;;
+  unhide|show-bar|always-show)
+    omarchy-shell shell setBarWidget "omarchy-pomodoro" "showOnlyWhenRunning" "false" "{}"
+    echo "Omarchy Pomodoro is now always visible on the status bar"
     ;;
   move|section|placement)
     sec="${2:-}"
