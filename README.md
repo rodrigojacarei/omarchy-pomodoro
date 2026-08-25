@@ -24,6 +24,10 @@ Designed specifically for the Omarchy status bar and Quickshell desktop environm
   - **Show / Hide Phase Icon**: Toggle displaying the phase glyph on the bar.
   - **Hide on Bar When Idle**: Automatically hide the widget from the bar when stopped, appearing only when active.
 
+- **Apps Menu & Launcher Integration**:
+  - Appears in your application launcher (Walker, Rofi, Omarchy Menu) as **"Omarchy Pomodoro"**.
+  - Search keywords: `pomodoro`, `timer`, `focus`, `productivity`, `clock`.
+
 - **Rich Popup Panel**:
   - **Hero Header**: Displays current phase, cycle status (`ROUND 2/4`), and quick start/pause toggle.
   - **Large Digital Clock**: Bold readout of remaining time.
@@ -76,8 +80,10 @@ omarchy plugin add https://github.com/<your-username>/omarchy-pomodoro.git --ena
 Clone or copy the folder to your Omarchy plugins directory:
 
 ```bash
-mkdir -p ~/.config/omarchy/plugins
+mkdir -p ~/.config/omarchy/plugins ~/.local/bin ~/.local/share/applications
 cp -r /path/to/omarchy-pomodoro ~/.config/omarchy/plugins/omarchy-pomodoro
+ln -sf ~/.config/omarchy/plugins/omarchy-pomodoro/bin/omarchy-pomodoro ~/.local/bin/omarchy-pomodoro
+cp ~/.config/omarchy/plugins/omarchy-pomodoro/omarchy-pomodoro.desktop ~/.local/share/applications/
 omarchy-shell shell rescanPlugins
 omarchy plugin enable omarchy-pomodoro --section center
 ```
@@ -90,10 +96,10 @@ You can bind hotkeys to control the timer in `~/.config/hypr/bindings.conf`:
 
 ```ini
 # Toggle Pomodoro popup panel
-bind = SUPER, P, exec, ~/.config/omarchy/plugins/omarchy-pomodoro/bin/omarchy-pomodoro toggle
+bind = SUPER, P, exec, omarchy-pomodoro toggle
 
 # Start/Pause Pomodoro timer
-bind = SUPER SHIFT, P, exec, ~/.config/omarchy/plugins/omarchy-pomodoro/bin/omarchy-pomodoro play-pause
+bind = SUPER SHIFT, P, exec, omarchy-pomodoro play-pause
 ```
 
 ---
@@ -112,41 +118,10 @@ omarchy-pomodoro short-break    # Switch to Short Break
 omarchy-pomodoro long-break     # Switch to Long Break
 omarchy-pomodoro +1m            # Add 1 minute
 omarchy-pomodoro -1m            # Subtract 1 minute
-omarchy-pomodoro move left      # Move widget to left section of the bar
+omarchy-pomodoro unhide         # Always show widget on bar
+omarchy-pomodoro move left      # Move widget to left section
 omarchy-pomodoro move center    # Move widget to center section
 omarchy-pomodoro move right     # Move widget to right section
-```
-
-You can also send direct IPC calls through `omarchy-shell`:
-
-```bash
-omarchy-shell omarchy-pomodoro toggle
-omarchy-shell omarchy-pomodoro toggleRunning
-omarchy-shell omarchy-pomodoro reset
-omarchy-shell shell moveBarWidget "omarchy-pomodoro" '{"section":"center"}'
-```
-
----
-
-## ⚙️ Configuration Schema
-
-In `~/.config/omarchy/shell.json`, you can customize the bar widget settings:
-
-```json
-{
-  "id": "omarchy-pomodoro",
-  "workMinutes": 25,
-  "shortBreakMinutes": 5,
-  "longBreakMinutes": 15,
-  "longBreakInterval": 4,
-  "autoStartBreaks": false,
-  "autoStartWork": false,
-  "notifyEnabled": true,
-  "soundEnabled": true,
-  "showTimerInBar": true,
-  "showIconInBar": true,
-  "showOnlyWhenRunning": false
-}
 ```
 
 ---
