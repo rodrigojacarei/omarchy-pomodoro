@@ -72,8 +72,7 @@ Panel {
 
       onCloseRequested: root.close()
       onTabRequested: function(direction) { root.switchPanel(direction) }
-
-      onSpacePressed: {
+      onActivateRequested: {
         if (timerHost && timerHost.togglePlayPause) timerHost.togglePlayPause()
       }
 
@@ -444,6 +443,7 @@ Panel {
 
               NumberField {
                 width: (parent.width - Style.space(16)) / 3
+                fieldWidth: width
                 label: "Focus (min)"
                 value: timerHost ? timerHost.workMinutes : 25
                 from: 1
@@ -458,6 +458,7 @@ Panel {
 
               NumberField {
                 width: (parent.width - Style.space(16)) / 3
+                fieldWidth: width
                 label: "Short (min)"
                 value: timerHost ? timerHost.shortBreakMinutes : 5
                 from: 1
@@ -472,6 +473,7 @@ Panel {
 
               NumberField {
                 width: (parent.width - Style.space(16)) / 3
+                fieldWidth: width
                 label: "Long (min)"
                 value: timerHost ? timerHost.longBreakMinutes : 15
                 from: 1
@@ -491,6 +493,7 @@ Panel {
 
               NumberField {
                 width: (parent.width - Style.space(16)) / 3
+                fieldWidth: width
                 label: "Rounds/Cycle"
                 value: timerHost ? timerHost.longBreakInterval : 4
                 from: 1

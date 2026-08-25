@@ -241,7 +241,7 @@ BarWidget {
     dimmed: root.isPaused
     horizontalMargin: 8.5
     verticalPadding: 6
-    tooltipText: root.phaseName + " (" + root.timeString + ")\nLeft click: open panel\nRight click: play/pause\nMiddle click: skip\nScroll: adjust ±1 min"
+    tooltipText: ""
 
     onPressed: function(b) {
       if (b === Qt.RightButton) {
