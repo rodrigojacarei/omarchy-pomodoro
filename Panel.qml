@@ -125,7 +125,11 @@ Panel {
 
       Flickable {
         id: panelScroll
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.rightMargin: panelScroll.interactive ? Style.space(12) : 0
         contentWidth: width
         contentHeight: mainColumn.implicitHeight
         clip: true
@@ -135,15 +139,19 @@ Panel {
 
         ScrollBar.vertical: ScrollBar {
           id: scrollBar
+          parent: keyCatcher
+          anchors.right: parent.right
+          anchors.top: parent.top
+          anchors.bottom: parent.bottom
           policy: panelScroll.interactive ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
-          width: Style.space(5)
+          width: Style.space(4)
           padding: 0
 
           contentItem: Rectangle {
-            implicitWidth: Style.space(5)
+            implicitWidth: Style.space(4)
             radius: width / 2
             color: root.accentColor
-            opacity: scrollBar.pressed ? 0.9 : (scrollBar.hovered ? 0.75 : (panelScroll.moving || panelScroll.flicking ? 0.6 : 0.35))
+            opacity: scrollBar.pressed ? 0.95 : (scrollBar.hovered ? 0.8 : (panelScroll.moving || panelScroll.flicking ? 0.65 : 0.35))
 
             Behavior on opacity {
               NumberAnimation { duration: 150 }
