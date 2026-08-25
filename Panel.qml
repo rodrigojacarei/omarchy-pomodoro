@@ -125,11 +125,7 @@ Panel {
 
       Flickable {
         id: panelScroll
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.rightMargin: panelScroll.interactive ? Style.space(12) : 0
+        anchors.fill: parent
         contentWidth: width
         contentHeight: mainColumn.implicitHeight
         clip: true
@@ -140,9 +136,10 @@ Panel {
         ScrollBar.vertical: ScrollBar {
           id: scrollBar
           parent: keyCatcher
-          anchors.right: parent.right
-          anchors.top: parent.top
-          anchors.bottom: parent.bottom
+          anchors.left: keyCatcher.right
+          anchors.leftMargin: Style.space(4)
+          anchors.top: keyCatcher.top
+          anchors.bottom: keyCatcher.bottom
           policy: panelScroll.interactive ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
           width: Style.space(4)
           padding: 0
