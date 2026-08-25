@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+# omarchy-pomodoro: CLI control tool for the Omarchy Pomodoro plugin
+# Sends IPC commands to the running Omarchy Shell instance.
+
+set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: omarchy-pomodoro [command]
+
+Commands:
+  toggle, open, show   Toggle or open the Pomodoro popup panel
+  close, hide          Close the Pomodoro popup panel
+  start                Start the countdown timer
+  pause                Pause the countdown timer
+  play-pause           Toggle start/pause
+  reset                Reset the current phase timer
+  skip                 Skip to the next phase (Work <-> Break)
+  work, focus          Switch to Focus session mode
+  short-break, short   Switch to Short Break mode
+  long-break, long     Switch to Long Break mode
+  +1, +1m, add         Add 1 minute to current timer
+  -1, -1m, sub         Subtract 1 minute from current timer
+
+Examples:
+  omarchy-pomodoro toggle
+  omarchy-pomodoro play-pause
+  omarchy-pomodoro skip
+EOF
+  exit 0
+}
+
+CMD="${1:-toggle}"
+
+case "$CMD" in
+  toggle)
+    omarchy-shell omarchy-pomodoro toggle
+    ;;
+  open|show)
+    omarchy-shell omarchy-pomodoro open
+    ;;
+  close|hide)
+    omarchy-shell omarchy-pomodoro close
+    ;;
+  start)
+    omarchy-shell omarchy-pomodoro start
+    ;;
+  pause)
+    omarchy-shell omarchy-pomodoro pause
+    ;;
+  play-pause|playpause)
+    omarchy-shell omarchy-pomodoro toggleRunning
+    ;;
+  reset)
+    omarchy-shell omarchy-pomodoro reset
+    ;;
+  skip)
+    omarchy-shell omarchy-pomodoro skip
+    ;;
+  work|focus)
+    omarchy-shell omarchy-pomodoro setWork
+    ;;
+  short-break|short)
+    omarchy-shell omarchy-pomodoro setShortBreak
+    ;;
+  long-break|long)
+    omarchy-shell omarchy-pomodoro setLongBreak
+    ;;
+  +1|+1m|add)
+    omarchy-shell omarchy-pomodoro addMinute
+    ;;
+  -1|-1m|sub)
+    omarchy-shell omarchy-pomodoro subMinute
+    ;;
+  -h|--help|help)
+    usage
+    ;;
+  *)
+    echo "Unknown command: $CMD" >&2
+    usage
+    ;;
+esac

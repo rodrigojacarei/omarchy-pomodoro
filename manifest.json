@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "omarchy-pomodoro",
+  "name": "Omarchy Pomodoro",
+  "version": "1.0.0",
+  "author": "Omarchy Community",
+  "description": "Customizable Pomodoro focus timer and break manager for Omarchy",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Omarchy Pomodoro",
+    "description": "Pomodoro timer widget for the Omarchy status bar",
+    "category": "Time",
+    "defaultSection": "center",
+    "allowMultiple": false
+  }
+}

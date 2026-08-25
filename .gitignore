@@ -1,0 +1,5 @@
+*.bak
+*.bak.*
+.DS_Store
+*~
+.cache/
