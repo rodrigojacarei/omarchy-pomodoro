@@ -18,6 +18,12 @@ Designed specifically for the Omarchy status bar and Quickshell desktop environm
     - **Middle Click**: Skip to next phase.
     - **Scroll Wheel**: Adjust remaining time ±1 minute on the fly.
 
+- **Bar Placement & Display Customization**:
+  - **Live Section Switcher**: Move widget to `Left`, `Center`, or `Right` directly from the popup settings UI or CLI.
+  - **Show / Hide Timer Digits**: Toggle displaying countdown digits on the bar.
+  - **Show / Hide Phase Icon**: Toggle displaying the phase glyph on the bar.
+  - **Hide on Bar When Idle**: Automatically hide the widget from the bar when stopped, appearing only when active.
+
 - **Rich Popup Panel**:
   - **Hero Header**: Displays current phase, cycle status (`ROUND 2/4`), and quick start/pause toggle.
   - **Large Digital Clock**: Bold readout of remaining time.
@@ -30,6 +36,8 @@ Designed specifically for the Omarchy status bar and Quickshell desktop environm
     - Short break duration (1–60 minutes)
     - Long break duration (1–90 minutes)
     - Rounds per cycle (1–12 rounds)
+    - Bar section placement (`Left`, `Center`, `Right`)
+    - Bar display options (timer digits, icon, hide when idle)
     - Auto-start breaks toggle
     - Auto-start focus sessions toggle
     - Desktop notifications toggle
@@ -93,17 +101,20 @@ bind = SUPER SHIFT, P, exec, ~/.config/omarchy/plugins/omarchy-pomodoro/bin/omar
 ## 🛠️ CLI Commands
 
 ```bash
-omarchy-pomodoro toggle       # Open or close the panel
-omarchy-pomodoro start        # Start timer
-omarchy-pomodoro pause        # Pause timer
-omarchy-pomodoro play-pause   # Toggle start/pause
-omarchy-pomodoro reset        # Reset timer
-omarchy-pomodoro skip         # Skip to next phase
-omarchy-pomodoro focus        # Switch to Focus mode
-omarchy-pomodoro short-break  # Switch to Short Break
-omarchy-pomodoro long-break   # Switch to Long Break
-omarchy-pomodoro +1m          # Add 1 minute
-omarchy-pomodoro -1m          # Subtract 1 minute
+omarchy-pomodoro toggle         # Open or close the panel
+omarchy-pomodoro start          # Start timer
+omarchy-pomodoro pause          # Pause timer
+omarchy-pomodoro play-pause     # Toggle start/pause
+omarchy-pomodoro reset          # Reset timer
+omarchy-pomodoro skip           # Skip to next phase
+omarchy-pomodoro focus          # Switch to Focus mode
+omarchy-pomodoro short-break    # Switch to Short Break
+omarchy-pomodoro long-break     # Switch to Long Break
+omarchy-pomodoro +1m            # Add 1 minute
+omarchy-pomodoro -1m            # Subtract 1 minute
+omarchy-pomodoro move left      # Move widget to left section of the bar
+omarchy-pomodoro move center    # Move widget to center section
+omarchy-pomodoro move right     # Move widget to right section
 ```
 
 You can also send direct IPC calls through `omarchy-shell`:
@@ -112,6 +123,7 @@ You can also send direct IPC calls through `omarchy-shell`:
 omarchy-shell omarchy-pomodoro toggle
 omarchy-shell omarchy-pomodoro toggleRunning
 omarchy-shell omarchy-pomodoro reset
+omarchy-shell shell moveBarWidget "omarchy-pomodoro" '{"section":"center"}'
 ```
 
 ---
@@ -132,7 +144,8 @@ In `~/.config/omarchy/shell.json`, you can customize the bar widget settings:
   "notifyEnabled": true,
   "soundEnabled": true,
   "showTimerInBar": true,
-  "showIconInBar": true
+  "showIconInBar": true,
+  "showOnlyWhenRunning": false
 }
 ```
 

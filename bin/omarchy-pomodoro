@@ -7,25 +7,27 @@ set -euo pipefail
 
 usage() {
   cat <<EOF
-Usage: omarchy-pomodoro [command]
+Usage: omarchy-pomodoro [command] [args...]
 
 Commands:
-  toggle, open, show   Toggle or open the Pomodoro popup panel
-  close, hide          Close the Pomodoro popup panel
-  start                Start the countdown timer
-  pause                Pause the countdown timer
-  play-pause           Toggle start/pause
-  reset                Reset the current phase timer
-  skip                 Skip to the next phase (Work <-> Break)
-  work, focus          Switch to Focus session mode
-  short-break, short   Switch to Short Break mode
-  long-break, long     Switch to Long Break mode
-  +1, +1m, add         Add 1 minute to current timer
-  -1, -1m, sub         Subtract 1 minute from current timer
+  toggle, open, show        Toggle or open the Pomodoro popup panel
+  close, hide               Close the Pomodoro popup panel
+  start                     Start the countdown timer
+  pause                     Pause the countdown timer
+  play-pause                Toggle start/pause
+  reset                     Reset the current phase timer
+  skip                      Skip to the next phase (Work <-> Break)
+  work, focus               Switch to Focus session mode
+  short-break, short        Switch to Short Break mode
+  long-break, long          Switch to Long Break mode
+  +1, +1m, add              Add 1 minute to current timer
+  -1, -1m, sub              Subtract 1 minute from current timer
+  move [left|center|right]  Move the widget to a bar section
 
 Examples:
   omarchy-pomodoro toggle
   omarchy-pomodoro play-pause
+  omarchy-pomodoro move right
   omarchy-pomodoro skip
 EOF
   exit 0
@@ -72,6 +74,15 @@ case "$CMD" in
     ;;
   -1|-1m|sub)
     omarchy-shell omarchy-pomodoro subMinute
+    ;;
+  move|section|placement)
+    sec="${2:-}"
+    if [[ -z "$sec" || ! "$sec" =~ ^(left|center|right)$ ]]; then
+      echo "Error: section must be 'left', 'center', or 'right'" >&2
+      exit 1
+    fi
+    omarchy-shell shell moveBarWidget "omarchy-pomodoro" "{\"section\":\"$sec\"}"
+    echo "Moved Omarchy Pomodoro widget to $sec section"
     ;;
   -h|--help|help)
     usage

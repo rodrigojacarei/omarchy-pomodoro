@@ -20,6 +20,7 @@ BarWidget {
   readonly property bool notifyEnabled: setting("notifyEnabled", true)
   readonly property bool showTimerInBar: setting("showTimerInBar", true)
   readonly property bool showIconInBar: setting("showIconInBar", true)
+  readonly property bool showOnlyWhenRunning: setting("showOnlyWhenRunning", false)
 
   // Pomodoro State
   property string phase: Model.PHASE_WORK
@@ -35,6 +36,9 @@ BarWidget {
   readonly property string timeString: Model.formatTime(timeLeft)
   readonly property string iconString: Model.phaseIcon(phase)
   readonly property string phaseName: Model.phaseTitle(phase)
+
+  // Visibility: can hide on bar when idle if configured
+  visible: !showOnlyWhenRunning || isRunning || isPaused || opened
 
   // Label for horizontal bar
   readonly property string barLabel: {
