@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
 import qs.Commons
@@ -129,7 +130,26 @@ Panel {
         contentHeight: mainColumn.implicitHeight
         clip: true
         boundsBehavior: Flickable.StopAtBounds
+        flickableDirection: Flickable.VerticalFlick
         interactive: contentHeight > height
+
+        ScrollBar.vertical: ScrollBar {
+          id: scrollBar
+          policy: panelScroll.interactive ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+          width: Style.space(5)
+          padding: 0
+
+          contentItem: Rectangle {
+            implicitWidth: Style.space(5)
+            radius: width / 2
+            color: root.accentColor
+            opacity: scrollBar.pressed ? 0.9 : (scrollBar.hovered ? 0.75 : (panelScroll.moving || panelScroll.flicking ? 0.6 : 0.35))
+
+            Behavior on opacity {
+              NumberAnimation { duration: 150 }
+            }
+          }
+        }
 
         Column {
           id: mainColumn
