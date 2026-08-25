@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls as QQC
 import Quickshell
 import Quickshell.Io
 import qs.Commons
@@ -64,7 +63,7 @@ Panel {
     centerOnBar: false
     focusTarget: keyCatcher
     contentWidth: panel.fittedContentWidth(Style.space(380))
-    contentHeight: panel.fittedContentHeight(mainColumn.implicitHeight, Style.space(640))
+    contentHeight: panel.fittedContentHeight(mainColumn.implicitHeight)
 
     PanelKeyCatcher {
       id: keyCatcher
@@ -94,151 +93,144 @@ Panel {
         }
       }
 
-      QQC.ScrollView {
-        id: scrollArea
+      Column {
+        id: mainColumn
         anchors.fill: parent
-        clip: true
-        QQC.ScrollBar.horizontal.policy: QQC.ScrollBar.AlwaysOff
-        QQC.ScrollBar.vertical.policy: mainColumn.implicitHeight > height ? QQC.ScrollBar.AsNeeded : QQC.ScrollBar.AlwaysOff
+        spacing: Style.space(14)
 
-        Column {
-          id: mainColumn
-          width: scrollArea.availableWidth
-          spacing: Style.space(14)
+        // ---------------------------------------------------- Hero Header
+        Item {
+          id: heroItem
+          width: parent.width
+          implicitHeight: Math.max(heroIcon.implicitHeight, heroLabels.implicitHeight, heroToggle.implicitHeight)
 
-          // ---------------------------------------------------- Hero Header
-          Item {
-            id: heroItem
-            width: parent.width
-            implicitHeight: Math.max(heroIcon.implicitHeight, heroLabels.implicitHeight, heroToggle.implicitHeight)
+          Text {
+            id: heroIcon
+            text: timerHost ? timerHost.iconString : "󰔛"
+            color: timerHost && timerHost.isRunning ? root.accentColor : root.contentForeground
+            font.family: root.contentFontFamily
+            font.pixelSize: Style.font.display
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+          }
+
+          Column {
+            id: heroLabels
+            anchors.left: heroIcon.right
+            anchors.leftMargin: Style.space(12)
+            anchors.right: heroToggle.left
+            anchors.rightMargin: Style.space(12)
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: Style.space(2)
 
             Text {
-              id: heroIcon
-              text: timerHost ? timerHost.iconString : "󰔛"
-              color: timerHost && timerHost.isRunning ? root.accentColor : root.contentForeground
+              text: timerHost ? timerHost.phaseName : "Focus Session"
+              color: root.contentForeground
               font.family: root.contentFontFamily
-              font.pixelSize: Style.font.display
-              anchors.left: parent.left
-              anchors.verticalCenter: parent.verticalCenter
+              font.pixelSize: Style.font.title
+              font.bold: true
+              elide: Text.ElideRight
+              width: parent.width
             }
 
-            Column {
-              id: heroLabels
-              anchors.left: heroIcon.right
-              anchors.leftMargin: Style.space(12)
-              anchors.right: heroToggle.left
-              anchors.rightMargin: Style.space(12)
-              anchors.verticalCenter: parent.verticalCenter
-              spacing: Style.space(2)
-
-              Text {
-                text: timerHost ? timerHost.phaseName : "Focus Session"
-                color: root.contentForeground
-                font.family: root.contentFontFamily
-                font.pixelSize: Style.font.title
-                font.bold: true
-                elide: Text.ElideRight
-                width: parent.width
-              }
-
-              Text {
-                property int sessionNum: (timerHost ? (timerHost.completedSessions % (timerHost.longBreakInterval || 4)) : 0) + 1
-                property int totalCycle: timerHost ? (timerHost.longBreakInterval || 4) : 4
-                property string stateStr: timerHost ? (timerHost.isRunning ? "RUNNING" : (timerHost.isPaused ? "PAUSED" : "READY")) : "READY"
-                text: stateStr + "  •  ROUND " + sessionNum + "/" + totalCycle
-                color: timerHost && timerHost.isRunning ? root.accentColor : Qt.darker(root.contentForeground, 1.4)
-                font.family: root.contentFontFamily
-                font.pixelSize: Style.font.caption
-                font.bold: true
-                font.letterSpacing: 1.1
-                elide: Text.ElideRight
-                width: parent.width
-              }
-            }
-
-            // Quick play/pause switch on hero
-            ToggleSwitch {
-              id: heroToggle
-              checked: timerHost ? timerHost.isRunning : false
-              foreground: root.contentForeground
-              accent: root.accentColor
-              anchors.right: parent.right
-              anchors.verticalCenter: parent.verticalCenter
-              onToggled: {
-                if (timerHost && timerHost.togglePlayPause) timerHost.togglePlayPause()
-              }
-
-              PanelToolTip {
-                visible: heroToggle.containsMouse
-                text: timerHost && timerHost.isRunning ? "Pause timer (Space)" : "Start timer (Space)"
-                fontFamily: root.contentFontFamily
-              }
+            Text {
+              property int sessionNum: (timerHost ? (timerHost.completedSessions % (timerHost.longBreakInterval || 4)) : 0) + 1
+              property int totalCycle: timerHost ? (timerHost.longBreakInterval || 4) : 4
+              property string stateStr: timerHost ? (timerHost.isRunning ? "RUNNING" : (timerHost.isPaused ? "PAUSED" : "READY")) : "READY"
+              text: stateStr + "  •  ROUND " + sessionNum + "/" + totalCycle
+              color: timerHost && timerHost.isRunning ? root.accentColor : Qt.darker(root.contentForeground, 1.4)
+              font.family: root.contentFontFamily
+              font.pixelSize: Style.font.caption
+              font.bold: true
+              font.letterSpacing: 1.1
+              elide: Text.ElideRight
+              width: parent.width
             }
           }
 
-          // ------------------------------------------ Timer Large Display & Bar
-          BorderSurface {
-            id: timerCard
-            width: parent.width
-            implicitHeight: timerContent.implicitHeight + Style.space(20)
-            radius: Style.cornerRadius
-            color: Style.normalFillFor(root.contentForeground, root.accentColor)
-            borderSpec: Border.controlSpec("normal", root.contentForeground, root.accentColor)
+          // Quick play/pause switch on hero
+          ToggleSwitch {
+            id: heroToggle
+            checked: timerHost ? timerHost.isRunning : false
+            foreground: root.contentForeground
+            accent: root.accentColor
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            onToggled: {
+              if (timerHost && timerHost.togglePlayPause) timerHost.togglePlayPause()
+            }
 
-            Column {
-              id: timerContent
-              anchors.centerIn: parent
-              width: parent.width - Style.space(24)
-              spacing: Style.space(10)
+            PanelToolTip {
+              visible: heroToggle.containsMouse
+              text: timerHost && timerHost.isRunning ? "Pause timer (Space)" : "Start timer (Space)"
+              fontFamily: root.contentFontFamily
+            }
+          }
+        }
 
-              // Big countdown display
-              Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: timerHost ? timerHost.timeString : "25:00"
-                color: timerHost && timerHost.isRunning ? root.accentColor : root.contentForeground
-                font.family: root.contentFontFamily
-                font.pixelSize: Style.font.display * 1.5
-                font.bold: true
+        // ------------------------------------------ Timer Large Display & Bar
+        BorderSurface {
+          id: timerCard
+          width: parent.width
+          implicitHeight: timerContent.implicitHeight + Style.space(20)
+          radius: Style.cornerRadius
+          color: Style.normalFillFor(root.contentForeground, root.accentColor)
+          borderSpec: Border.controlSpec("normal", root.contentForeground, root.accentColor)
+
+          Column {
+            id: timerContent
+            anchors.centerIn: parent
+            width: parent.width - Style.space(24)
+            spacing: Style.space(10)
+
+            // Big countdown display
+            Text {
+              anchors.horizontalCenter: parent.horizontalCenter
+              text: timerHost ? timerHost.timeString : "25:00"
+              color: timerHost && timerHost.isRunning ? root.accentColor : root.contentForeground
+              font.family: root.contentFontFamily
+              font.pixelSize: Style.font.display * 1.5
+              font.bold: true
+            }
+
+            // Linear Progress Bar
+            Item {
+              width: parent.width
+              height: Style.space(6)
+
+              // Background track
+              Rectangle {
+                anchors.fill: parent
+                radius: height / 2
+                color: Qt.rgba(root.contentForeground.r, root.contentForeground.g, root.contentForeground.b, 0.15)
               }
 
-              // Linear Progress Bar
-              Item {
-                width: parent.width
-                height: Style.space(6)
+              // Foreground progress
+              Rectangle {
+                height: parent.height
+                width: Math.max(height, Math.round(parent.width * (timerHost ? timerHost.progress : 0)))
+                radius: height / 2
+                color: root.accentColor
 
-                // Background track
-                Rectangle {
-                  anchors.fill: parent
-                  radius: height / 2
-                  color: Qt.rgba(root.contentForeground.r, root.contentForeground.g, root.contentForeground.b, 0.15)
-                }
-
-                // Foreground progress
-                Rectangle {
-                  height: parent.height
-                  width: Math.max(height, Math.round(parent.width * (timerHost ? timerHost.progress : 0)))
-                  radius: height / 2
-                  color: root.accentColor
-
-                  Behavior on width {
-                    NumberAnimation { duration: 250; easing.type: Easing.OutCubic }
-                  }
+                Behavior on width {
+                  NumberAnimation { duration: 250; easing.type: Easing.OutCubic }
                 }
               }
+            }
 
-              // Pomodoro Session Cycle Dots
-              Row {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: Style.space(8)
+            // Pomodoro Session Cycle Dots
+            Row {
+              anchors.horizontalCenter: parent.horizontalCenter
+              spacing: Style.space(8)
 
-                Repeater {
-                  model: timerHost ? (timerHost.longBreakInterval || 4) : 4
+              Repeater {
+                model: timerHost ? (timerHost.longBreakInterval || 4) : 4
 
-                  Rectangle {
-                    required property int index
-                    readonly property int currentRound: timerHost ? (timerHost.completedSessions % (timerHost.longBreakInterval || 4)) : 0
-                    readonly property bool isDone: index < currentRound
-                    readonly property bool isCurrent: index === currentRound
+                Rectangle {
+                  required property int index
+                  readonly property int currentRound: timerHost ? (timerHost.completedSessions % (timerHost.longBreakInterval || 4)) : 0
+                  readonly property bool isDone: index < currentRound
+                  readonly property bool isCurrent: index === currentRound
 
                     width: isCurrent ? Style.space(18) : Style.space(8)
                     height: Style.space(8)
@@ -297,7 +289,7 @@ Panel {
             }
 
             Button {
-              width: modeRow.width - (modeWorkBtn.width + modeShortBtn.width + modeRow.spacing * 2)
+              width: modeRow.width - modeWorkBtn.width - modeShortBtn.width - modeRow.spacing * 2
               text: "Long"
               iconText: "󰒲"
               selected: timerHost ? timerHost.phase === Model.PHASE_LONG_BREAK : false
@@ -320,7 +312,7 @@ Panel {
             // Start / Pause Main Button
             Button {
               id: startPauseBtn
-              width: Math.max(100, controlsRow.width - (resetBtn.width + skipBtn.width + controlsRow.spacing * 2))
+              width: controlsRow.width - resetBtn.width - skipBtn.width - controlsRow.spacing * 2
               text: timerHost && timerHost.isRunning ? "Pause" : "Start"
               iconText: timerHost && timerHost.isRunning ? "󰏤" : "󰐊"
               active: timerHost ? timerHost.isRunning : false
@@ -336,30 +328,34 @@ Panel {
             }
 
             // Reset Button
-            PanelActionButton {
+            Button {
               id: resetBtn
-              size: Style.space(38)
+              width: Style.space(46)
               iconText: "󰑖"
               tooltipText: "Reset timer (R)"
-              foreground: root.contentForeground
-              fontFamily: root.contentFontFamily
-              fontSize: Style.font.title
               bordered: true
+              foreground: root.contentForeground
+              accent: root.accentColor
+              fontFamily: root.contentFontFamily
+              fontSize: Style.font.body
+              iconSize: Style.font.body
               onClicked: {
                 if (timerHost && timerHost.reset) timerHost.reset()
               }
             }
 
             // Skip Button
-            PanelActionButton {
+            Button {
               id: skipBtn
-              size: Style.space(38)
+              width: Style.space(46)
               iconText: "󰒭"
               tooltipText: "Skip to next phase (S)"
-              foreground: root.contentForeground
-              fontFamily: root.contentFontFamily
-              fontSize: Style.font.title
               bordered: true
+              foreground: root.contentForeground
+              accent: root.accentColor
+              fontFamily: root.contentFontFamily
+              fontSize: Style.font.body
+              iconSize: Style.font.body
               onClicked: {
                 if (timerHost && timerHost.skipPhase) timerHost.skipPhase()
               }
@@ -378,6 +374,7 @@ Panel {
               width: adjustRow.itemWidth
               text: "-5m"
               foreground: root.contentForeground
+              accent: root.accentColor
               fontFamily: root.contentFontFamily
               fontSize: Style.font.caption
               onClicked: if (timerHost && timerHost.adjustTime) timerHost.adjustTime(-300)
@@ -388,6 +385,7 @@ Panel {
               width: adjustRow.itemWidth
               text: "-1m"
               foreground: root.contentForeground
+              accent: root.accentColor
               fontFamily: root.contentFontFamily
               fontSize: Style.font.caption
               onClicked: if (timerHost && timerHost.adjustTime) timerHost.adjustTime(-60)
@@ -398,15 +396,17 @@ Panel {
               width: adjustRow.itemWidth
               text: "+1m"
               foreground: root.contentForeground
+              accent: root.accentColor
               fontFamily: root.contentFontFamily
               fontSize: Style.font.caption
               onClicked: if (timerHost && timerHost.adjustTime) timerHost.adjustTime(60)
             }
 
             Button {
-              width: adjustRow.width - (adj1.width + adj2.width + adj3.width + adjustRow.spacing * 3)
+              width: adjustRow.width - adj1.width - adj2.width - adj3.width - adjustRow.spacing * 3
               text: "+5m"
               foreground: root.contentForeground
+              accent: root.accentColor
               fontFamily: root.contentFontFamily
               fontSize: Style.font.caption
               onClicked: if (timerHost && timerHost.adjustTime) timerHost.adjustTime(300)
@@ -529,6 +529,7 @@ Panel {
                 text: "Reset Cycle Count"
                 iconText: "󰑖"
                 foreground: root.contentForeground
+                accent: root.accentColor
                 fontFamily: root.contentFontFamily
                 fontSize: Style.font.bodySmall
                 onClicked: {
@@ -591,7 +592,6 @@ Panel {
             }
           }
         }
-      }
     }
   }
 }
